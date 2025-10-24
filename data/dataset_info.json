@@ -1,0 +1,12 @@
+{
+  "created": "2025-10-21",
+  "total_files": 100,
+  "real_files": 50,
+  "fake_files": 50,
+  "sample_rate": 16000,
+  "description": "Synthetic demo dataset for deepfake detection testing",
+  "characteristics": {
+    "real": "Natural harmonics, vibrato, background noise, amplitude variation",
+    "fake": "Perfect harmonics, mechanical vibrato, clean signal, uniform amplitude"
+  }
+}

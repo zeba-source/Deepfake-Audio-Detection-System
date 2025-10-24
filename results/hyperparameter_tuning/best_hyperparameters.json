@@ -1,0 +1,258 @@
+{
+    "best_validation_accuracy": 83.0,
+    "best_trial_number": 15,
+    "best_hyperparameters": {
+        "learning_rate": 0.0037219759810765193,
+        "batch_size": 32,
+        "dropout_rate": 0.45895205814134943,
+        "weight_decay": 0.0007552779910707345,
+        "optimizer": "Adam"
+    },
+    "study_statistics": {
+        "n_trials": 20,
+        "n_completed_trials": 11,
+        "n_pruned_trials": 9
+    },
+    "all_trials": [
+        {
+            "number": 0,
+            "value": 66.0,
+            "params": {
+                "learning_rate": 0.0001329291894316216,
+                "batch_size": 16,
+                "dropout_rate": 0.36240745617697456,
+                "weight_decay": 2.0511104188433963e-05,
+                "optimizer": "AdamW"
+            },
+            "state": "COMPLETE"
+        },
+        {
+            "number": 1,
+            "value": 78.0,
+            "params": {
+                "learning_rate": 0.001331121608073689,
+                "batch_size": 32,
+                "dropout_rate": 0.38493564427131044,
+                "weight_decay": 2.3102018878452926e-05,
+                "optimizer": "SGD"
+            },
+            "state": "COMPLETE"
+        },
+        {
+            "number": 2,
+            "value": 73.0,
+            "params": {
+                "learning_rate": 0.00019762189340280086,
+                "batch_size": 32,
+                "dropout_rate": 0.41685785941408726,
+                "weight_decay": 5.4041038546473305e-05,
+                "optimizer": "AdamW"
+            },
+            "state": "COMPLETE"
+        },
+        {
+            "number": 3,
+            "value": 71.0,
+            "params": {
+                "learning_rate": 0.0003489018845491386,
+                "batch_size": 64,
+                "dropout_rate": 0.3682096494749166,
+                "weight_decay": 1.3492834268013232e-05,
+                "optimizer": "AdamW"
+            },
+            "state": "COMPLETE"
+        },
+        {
+            "number": 4,
+            "value": 70.0,
+            "params": {
+                "learning_rate": 8.200518402245828e-05,
+                "batch_size": 32,
+                "dropout_rate": 0.3488152939379115,
+                "weight_decay": 9.7803370166594e-05,
+                "optimizer": "AdamW"
+            },
+            "state": "COMPLETE"
+        },
+        {
+            "number": 5,
+            "value": 49.0,
+            "params": {
+                "learning_rate": 0.0009717775305059633,
+                "batch_size": 64,
+                "dropout_rate": 0.3739417822102108,
+                "weight_decay": 0.0008692991511139548,
+                "optimizer": "AdamW"
+            },
+            "state": "PRUNED"
+        },
+        {
+            "number": 6,
+            "value": 77.0,
+            "params": {
+                "learning_rate": 0.0006218704727769079,
+                "batch_size": 16,
+                "dropout_rate": 0.3180909155642152,
+                "weight_decay": 4.473636174621264e-05,
+                "optimizer": "SGD"
+            },
+            "state": "COMPLETE"
+        },
+        {
+            "number": 7,
+            "value": 61.0,
+            "params": {
+                "learning_rate": 0.00011756010900231849,
+                "batch_size": 32,
+                "dropout_rate": 0.6208787923016159,
+                "weight_decay": 1.4096175149815848e-05,
+                "optimizer": "Adam"
+            },
+            "state": "PRUNED"
+        },
+        {
+            "number": 8,
+            "value": 60.0,
+            "params": {
+                "learning_rate": 1.0388823104027935e-05,
+                "batch_size": 16,
+                "dropout_rate": 0.6085081386743783,
+                "weight_decay": 1.4063366777718176e-05,
+                "optimizer": "SGD"
+            },
+            "state": "PRUNED"
+        },
+        {
+            "number": 9,
+            "value": 78.0,
+            "params": {
+                "learning_rate": 0.0007411299781083245,
+                "batch_size": 16,
+                "dropout_rate": 0.4300733288106988,
+                "weight_decay": 0.0002878805718308924,
+                "optimizer": "AdamW"
+            },
+            "state": "COMPLETE"
+        },
+        {
+            "number": 10,
+            "value": 79.0,
+            "params": {
+                "learning_rate": 0.008013349589915042,
+                "batch_size": 32,
+                "dropout_rate": 0.5279583911244794,
+                "weight_decay": 0.000220058287850274,
+                "optimizer": "SGD"
+            },
+            "state": "COMPLETE"
+        },
+        {
+            "number": 11,
+            "value": 76.0,
+            "params": {
+                "learning_rate": 0.006235623658060691,
+                "batch_size": 32,
+                "dropout_rate": 0.514083907969378,
+                "weight_decay": 0.00029749807592441193,
+                "optimizer": "SGD"
+            },
+            "state": "COMPLETE"
+        },
+        {
+            "number": 12,
+            "value": 66.0,
+            "params": {
+                "learning_rate": 0.009688563445522482,
+                "batch_size": 32,
+                "dropout_rate": 0.5248375441193094,
+                "weight_decay": 0.00023214976260683019,
+                "optimizer": "SGD"
+            },
+            "state": "PRUNED"
+        },
+        {
+            "number": 13,
+            "value": 50.0,
+            "params": {
+                "learning_rate": 0.003013971965338302,
+                "batch_size": 32,
+                "dropout_rate": 0.6968315997568968,
+                "weight_decay": 0.00014192987803367168,
+                "optimizer": "SGD"
+            },
+            "state": "PRUNED"
+        },
+        {
+            "number": 14,
+            "value": 81.0,
+            "params": {
+                "learning_rate": 0.0023681433985632936,
+                "batch_size": 32,
+                "dropout_rate": 0.45485594395883777,
+                "weight_decay": 0.0005541681730529239,
+                "optimizer": "Adam"
+            },
+            "state": "COMPLETE"
+        },
+        {
+            "number": 15,
+            "value": 83.0,
+            "params": {
+                "learning_rate": 0.0037219759810765193,
+                "batch_size": 32,
+                "dropout_rate": 0.45895205814134943,
+                "weight_decay": 0.0007552779910707345,
+                "optimizer": "Adam"
+            },
+            "state": "COMPLETE"
+        },
+        {
+            "number": 16,
+            "value": 49.0,
+            "params": {
+                "learning_rate": 0.0025105429227438997,
+                "batch_size": 64,
+                "dropout_rate": 0.4536491467835719,
+                "weight_decay": 0.000983472939833359,
+                "optimizer": "Adam"
+            },
+            "state": "PRUNED"
+        },
+        {
+            "number": 17,
+            "value": 58.0,
+            "params": {
+                "learning_rate": 0.0027725164291650044,
+                "batch_size": 32,
+                "dropout_rate": 0.4891087350055146,
+                "weight_decay": 0.0005396196551890555,
+                "optimizer": "Adam"
+            },
+            "state": "PRUNED"
+        },
+        {
+            "number": 18,
+            "value": 60.0,
+            "params": {
+                "learning_rate": 3.776414319785236e-05,
+                "batch_size": 32,
+                "dropout_rate": 0.5635442550567243,
+                "weight_decay": 0.0005413216497028851,
+                "optimizer": "Adam"
+            },
+            "state": "PRUNED"
+        },
+        {
+            "number": 19,
+            "value": 57.0,
+            "params": {
+                "learning_rate": 0.001651612358809978,
+                "batch_size": 64,
+                "dropout_rate": 0.4679531225439931,
+                "weight_decay": 0.0005069408043997066,
+                "optimizer": "Adam"
+            },
+            "state": "PRUNED"
+        }
+    ]
+}

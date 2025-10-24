@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Audio Detection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .demo-badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f8f9ff;
+        }
+        
+        .upload-area.dragging {
+            background: #e8ebff;
+            border-color: #764ba2;
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .file-info {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .file-info.show {
+            display: block;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result.fake {
+            background: #ffe0e0;
+            border: 2px solid #ff6b6b;
+        }
+        
+        .result.real {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .result-label {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .result-label.fake {
+            color: #ff6b6b;
+        }
+        
+        .result-label.real {
+            color: #28a745;
+        }
+        
+        .confidence {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s;
+        }
+        
+        .details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .detail-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .supported-formats {
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Deepfake Audio Detection</h1>
+            <p>Upload an audio file to detect if it's real or AI-generated</p>
+            <span class="demo-badge">DEMO MODE</span>
+        </div>
+        
+        <div class="warning-box">
+            ⚠️ <strong>Demo Mode:</strong> Predictions are randomly generated for demonstration. Train a model using <code>main_train.py</code> for real predictions.
+        </div>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">🎤</div>
+            <div class="upload-text">Click or drag audio file here</div>
+            <input type="file" id="fileInput" class="file-input" accept=".wav,.mp3,.flac,.ogg,.m4a">
+            <button class="btn" onclick="document.getElementById('fileInput').click()">Choose File</button>
+        </div>
+        
+        <div class="file-info" id="fileInfo">
+            <strong>Selected:</strong> <span id="fileName"></span><br>
+            <strong>Size:</strong> <span id="fileSize"></span>
+        </div>
+        
+        <div style="text-align: center;">
+            <button class="btn" id="analyzeBtn" onclick="analyzeAudio()" disabled>
+                🔍 Analyze Audio
+            </button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>Analyzing audio...</div>
+        </div>
+        
+        <div class="result" id="result">
+            <div class="result-header">
+                <div class="result-label" id="resultLabel"></div>
+                <div class="confidence" id="confidence"></div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="details">
+                <div class="detail-item">
+                    <div class="detail-label">Real Probability</div>
+                    <div class="detail-value" id="realProb"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Fake Probability</div>
+                    <div class="detail-value" id="fakeProb"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Processing Time</div>
+                    <div class="detail-value" id="processingTime"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">File Size</div>
+                    <div class="detail-value" id="fileSizeResult"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="supported-formats">
+            Supported formats: WAV, MP3, FLAC, OGG, M4A
+        </div>
+        
+        <div class="footer">
+            <p>Powered by PyTorch & Flask | <a href="/info" target="_blank">API Info</a></p>
+        </div>
+    </div>
+    
+    <script>
+        let selectedFile = null;
+        
+        // File input handling
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInfo = document.getElementById('fileInfo');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        
+        fileInput.addEventListener('change', handleFileSelect);
+        
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragging');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragging');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragging');
+            
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect();
+            }
+        });
+        
+        function handleFileSelect() {
+            if (fileInput.files.length > 0) {
+                selectedFile = fileInput.files[0];
+                document.getElementById('fileName').textContent = selectedFile.name;
+                document.getElementById('fileSize').textContent = formatBytes(selectedFile.size);
+                fileInfo.classList.add('show');
+                analyzeBtn.disabled = false;
+                
+                // Hide previous result
+                document.getElementById('result').classList.remove('show');
+            }
+        }
+        
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+        
+        async function analyzeAudio() {
+            if (!selectedFile) return;
+            
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('result').classList.remove('show');
+            analyzeBtn.disabled = true;
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    displayResult(data);
+                }
+            } catch (error) {
+                alert('Error analyzing audio: ' + error);
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+                analyzeBtn.disabled = false;
+            }
+        }
+        
+        function displayResult(data) {
+            const result = document.getElementById('result');
+            const isFake = data.prediction === 'FAKE';
+            
+            // Set result class
+            result.className = 'result show ' + (isFake ? 'fake' : 'real');
+            
+            // Set label
+            const label = document.getElementById('resultLabel');
+            label.className = 'result-label ' + (isFake ? 'fake' : 'real');
+            label.textContent = data.prediction + (data.demo_mode ? ' (Demo)' : '');
+            
+            // Set confidence
+            document.getElementById('confidence').textContent = 
+                (data.confidence * 100).toFixed(1) + '%';
+            
+            // Set progress bar
+            document.getElementById('progressFill').style.width = 
+                (data.confidence * 100) + '%';
+            
+            // Set probabilities
+            document.getElementById('realProb').textContent = 
+                (data.probabilities.real * 100).toFixed(1) + '%';
+            document.getElementById('fakeProb').textContent = 
+                (data.probabilities.fake * 100).toFixed(1) + '%';
+            
+            // Set processing time
+            document.getElementById('processingTime').textContent = 
+                data.processing_time_ms.toFixed(1) + ' ms';
+            
+            // Set file size
+            document.getElementById('fileSizeResult').textContent = 
+                formatBytes(data.file_size_bytes);
+        }
+    </script>
+</body>
+</html>

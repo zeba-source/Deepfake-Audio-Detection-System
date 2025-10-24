@@ -1,0 +1,91 @@
+{
+  "model_name": "SimpleCNN",
+  "input_shape": [
+    1,
+    1,
+    32,
+    32
+  ],
+  "timestamp": "2025-10-21T22:53:36.790087",
+  "devices_tested": [
+    "cpu"
+  ],
+  "batch_sizes_tested": [
+    1,
+    4,
+    8,
+    16
+  ],
+  "profiles": {
+    "cpu": {
+      "single_inference": {
+        "mean_ms": 1.2669260002439842,
+        "std_ms": 0.6652472852142476,
+        "min_ms": 0.7437000022036955,
+        "max_ms": 3.882699995301664,
+        "median_ms": 0.9877999982563779,
+        "p95_ms": 2.4833049981680215,
+        "p99_ms": 3.6176589986280296,
+        "num_iterations": 50,
+        "throughput_fps": 789.3120827952228
+      },
+      "batch_inference": {
+        "1": {
+          "mean_ms": 1.51895200018771,
+          "std_ms": 0.6605733540357825,
+          "min_ms": 0.821699999505654,
+          "max_ms": 3.4855000048992224,
+          "samples_per_second": 658.3486508305867,
+          "ms_per_sample": 1.51895200018771
+        },
+        "4": {
+          "mean_ms": 3.9505719994485844,
+          "std_ms": 0.6268319979937732,
+          "min_ms": 2.7128000001539476,
+          "max_ms": 5.736499995691702,
+          "samples_per_second": 1012.5116060556078,
+          "ms_per_sample": 0.9876429998621461
+        },
+        "8": {
+          "mean_ms": 5.770655999949668,
+          "std_ms": 1.2185675469324864,
+          "min_ms": 3.7016999995103106,
+          "max_ms": 10.123099993506912,
+          "samples_per_second": 1386.3241891510734,
+          "ms_per_sample": 0.7213319999937085
+        },
+        "16": {
+          "mean_ms": 9.031371999590192,
+          "std_ms": 0.8973453652618494,
+          "min_ms": 6.784500001231208,
+          "max_ms": 11.510500000440516,
+          "samples_per_second": 1771.602365701027,
+          "ms_per_sample": 0.564460749974387
+        }
+      },
+      "memory": {
+        "device": "cpu",
+        "memory_before_mb": 202.5859375,
+        "memory_after_mb": 202.6484375,
+        "memory_increase_mb": 0.0625
+      }
+    }
+  },
+  "parameters": {
+    "total": 92930,
+    "trainable": 92930,
+    "non_trainable": 0,
+    "breakdown": {
+      "features": 92672,
+      "classifier": 258
+    }
+  },
+  "flops": {
+    "flops": 9740672,
+    "flops_formatted": "9.741M",
+    "params": 92930,
+    "params_formatted": "92.930K",
+    "method": "thop",
+    "available": true
+  }
+}

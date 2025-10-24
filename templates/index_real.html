@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Audio Detection - AI Powered</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .badge-real {
+            background: #28a745;
+            color: white;
+        }
+        
+        .badge-demo {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .info-box {
+            background: #e8f4fd;
+            border: 2px solid #2196F3;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .info-box.demo {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+        
+        .info-box strong {
+            color: #2196F3;
+        }
+        
+        .info-box.demo strong {
+            color: #856404;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f8f9ff;
+        }
+        
+        .upload-area.dragging {
+            background: #e8ebff;
+            border-color: #764ba2;
+            transform: scale(1.02);
+        }
+        
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .upload-text {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+        
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .file-info {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #667eea;
+        }
+        
+        .file-info.show {
+            display: block;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: 15px;
+            display: none;
+            animation: slideIn 0.5s;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result.fake {
+            background: linear-gradient(135deg, #ff6b6b20, #ff6b6b10);
+            border: 3px solid #ff6b6b;
+        }
+        
+        .result.real {
+            background: linear-gradient(135deg, #28a74520, #28a74510);
+            border: 3px solid #28a745;
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .result-label {
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .result-label.fake {
+            color: #ff6b6b;
+        }
+        
+        .result-label.real {
+            color: #28a745;
+        }
+        
+        .confidence {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: white;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.8s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .detail-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .detail-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .supported-formats {
+            text-align: center;
+            color: #999;
+            font-size: 0.95rem;
+            margin-top: 25px;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Deepfake Audio Detection</h1>
+            <p>AI-Powered Human vs. AI Voice Detection</p>
+            {% if model_loaded %}
+                <span class="status-badge badge-real">✅ AI MODEL ACTIVE</span>
+            {% else %}
+                <span class="status-badge badge-demo">⚠️ DEMO MODE</span>
+            {% endif %}
+        </div>
+        
+        {% if model_loaded %}
+        <div class="info-box">
+            <strong>🤖 AI Detection Active:</strong> Upload audio to detect if it's human-generated or AI-synthesized. The model analyzes acoustic patterns to identify deepfake audio.
+        </div>
+        {% else %}
+        <div class="info-box demo">
+            <strong>⚠️ Demo Mode:</strong> No trained model found. Predictions are randomly generated. Train a model with <code>python main_train.py</code> for real detection.
+        </div>
+        {% endif %}
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">🎤</div>
+            <div class="upload-text">Drop audio file here or click to browse</div>
+            <input type="file" id="fileInput" class="file-input" accept=".wav,.mp3,.flac,.ogg,.m4a">
+            <button class="btn" onclick="document.getElementById('fileInput').click()">Choose Audio File</button>
+        </div>
+        
+        <div class="file-info" id="fileInfo">
+            <strong>📁 Selected File:</strong> <span id="fileName"></span><br>
+            <strong>📊 Size:</strong> <span id="fileSize"></span>
+        </div>
+        
+        <div style="text-align: center;">
+            <button class="btn" id="analyzeBtn" onclick="analyzeAudio()" disabled style="font-size: 1.2rem; padding: 16px 40px;">
+                🔍 Analyze Audio
+            </button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div style="font-size: 1.1rem; color: #667eea;">🧠 AI is analyzing the audio...</div>
+        </div>
+        
+        <div class="result" id="result">
+            <div class="result-header">
+                <div class="result-label" id="resultLabel"></div>
+                <div class="confidence" id="confidence"></div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="details">
+                <div class="detail-item">
+                    <div class="detail-label">👤 Human Voice</div>
+                    <div class="detail-value" id="realProb"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">🤖 AI Generated</div>
+                    <div class="detail-value" id="fakeProb"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">⚡ Processing Time</div>
+                    <div class="detail-value" id="processingTime"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">📏 File Size</div>
+                    <div class="detail-value" id="fileSizeResult"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="supported-formats">
+            <strong>Supported Formats:</strong> WAV, MP3, FLAC, OGG, M4A<br>
+            <strong>Max Size:</strong> 16 MB
+        </div>
+        
+        <div class="footer">
+            <p>Powered by PyTorch Deep Learning | <a href="/info" target="_blank">API Info</a> | <a href="/health" target="_blank">Status</a></p>
+        </div>
+    </div>
+    
+    <script>
+        let selectedFile = null;
+        
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInfo = document.getElementById('fileInfo');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        
+        fileInput.addEventListener('change', handleFileSelect);
+        
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragging');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragging');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragging');
+            
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect();
+            }
+        });
+        
+        function handleFileSelect() {
+            if (fileInput.files.length > 0) {
+                selectedFile = fileInput.files[0];
+                document.getElementById('fileName').textContent = selectedFile.name;
+                document.getElementById('fileSize').textContent = formatBytes(selectedFile.size);
+                fileInfo.classList.add('show');
+                analyzeBtn.disabled = false;
+                
+                document.getElementById('result').classList.remove('show');
+            }
+        }
+        
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+        
+        async function analyzeAudio() {
+            if (!selectedFile) return;
+            
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('result').classList.remove('show');
+            analyzeBtn.disabled = true;
+            
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                console.log('Server response:', data); // Debug log
+                
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    displayResult(data);
+                }
+            } catch (error) {
+                console.error('Fetch error:', error); // Debug log
+                alert('Error analyzing audio: ' + error);
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+                analyzeBtn.disabled = false;
+            }
+        }
+        
+        function displayResult(data) {
+            // Validate data structure
+            if (!data || typeof data !== 'object') {
+                alert('Invalid response from server');
+                return;
+            }
+            
+            // Set defaults for missing values
+            const prediction = data.prediction || 'UNKNOWN';
+            const confidence = data.confidence || 0;
+            const realProb = (data.probabilities && data.probabilities.real) || 0;
+            const fakeProb = (data.probabilities && data.probabilities.fake) || 0;
+            const processingTime = data.processing_time_ms || 0;
+            const fileSize = data.file_size_bytes || 0;
+            
+            const result = document.getElementById('result');
+            const isFake = prediction === 'FAKE';
+            
+            result.className = 'result show ' + (isFake ? 'fake' : 'real');
+            
+            const label = document.getElementById('resultLabel');
+            label.className = 'result-label ' + (isFake ? 'fake' : 'real');
+            
+            if (isFake) {
+                label.innerHTML = '🤖 AI-Generated';
+            } else {
+                label.innerHTML = '👤 Human Voice';
+            }
+            
+            if (data.demo_mode) {
+                label.innerHTML += ' <span style="font-size: 0.7rem; opacity: 0.7;">(Demo)</span>';
+            }
+            
+            document.getElementById('confidence').textContent = 
+                (confidence * 100).toFixed(1) + '%';
+            
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = (confidence * 100) + '%';
+            progressFill.textContent = (confidence * 100).toFixed(1) + '%';
+            
+            document.getElementById('realProb').textContent = 
+                (realProb * 100).toFixed(1) + '%';
+            document.getElementById('fakeProb').textContent = 
+                (fakeProb * 100).toFixed(1) + '%';
+            
+            document.getElementById('processingTime').textContent = 
+                processingTime.toFixed(1) + ' ms';
+            
+            document.getElementById('fileSizeResult').textContent = 
+                formatBytes(fileSize);
+        }
+    </script>
+</body>
+</html>

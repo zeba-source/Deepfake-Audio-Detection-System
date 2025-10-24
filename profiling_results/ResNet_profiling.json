@@ -1,0 +1,113 @@
+{
+  "model_name": "ResNet",
+  "input_shape": [
+    1,
+    1,
+    64,
+    64
+  ],
+  "timestamp": "2025-10-21T22:53:38.343808",
+  "devices_tested": [
+    "cpu"
+  ],
+  "batch_sizes_tested": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "profiles": {
+    "cpu": {
+      "single_inference": {
+        "mean_ms": 7.306752000295091,
+        "std_ms": 1.3953946012533622,
+        "min_ms": 5.652100000588689,
+        "max_ms": 13.222400004451629,
+        "median_ms": 7.226249999803258,
+        "p95_ms": 9.311445002094842,
+        "p99_ms": 13.024993999570144,
+        "num_iterations": 100,
+        "throughput_fps": 136.85971550144495
+      },
+      "batch_inference": {
+        "1": {
+          "mean_ms": 7.498563999834005,
+          "std_ms": 1.1712795317805649,
+          "min_ms": 5.761500004155096,
+          "max_ms": 9.570899994287174,
+          "samples_per_second": 133.3588671140417,
+          "ms_per_sample": 7.498563999834005
+        },
+        "2": {
+          "mean_ms": 10.945521999965422,
+          "std_ms": 1.5757607620144694,
+          "min_ms": 8.421300000918563,
+          "max_ms": 16.993699995509814,
+          "samples_per_second": 182.72312640788792,
+          "ms_per_sample": 5.472760999982711
+        },
+        "4": {
+          "mean_ms": 16.226279999827966,
+          "std_ms": 1.9169416355105877,
+          "min_ms": 12.226200000441168,
+          "max_ms": 23.283599999558646,
+          "samples_per_second": 246.51368027930053,
+          "ms_per_sample": 4.0565699999569915
+        },
+        "8": {
+          "mean_ms": 27.696194000309333,
+          "std_ms": 2.673321162716643,
+          "min_ms": 23.042100001475774,
+          "max_ms": 32.91259999969043,
+          "samples_per_second": 288.8483522288532,
+          "ms_per_sample": 3.4620242500386667
+        },
+        "16": {
+          "mean_ms": 51.26029799997923,
+          "std_ms": 6.863563775988171,
+          "min_ms": 42.47580000082962,
+          "max_ms": 84.72749999782536,
+          "samples_per_second": 312.1324031320786,
+          "ms_per_sample": 3.203768624998702
+        },
+        "32": {
+          "mean_ms": 98.91914399937377,
+          "std_ms": 7.307420622571376,
+          "min_ms": 85.13790000142762,
+          "max_ms": 112.99300000246149,
+          "samples_per_second": 323.4965316744207,
+          "ms_per_sample": 3.0912232499804304
+        }
+      },
+      "memory": {
+        "device": "cpu",
+        "memory_before_mb": 229.28125,
+        "memory_after_mb": 230.2265625,
+        "memory_increase_mb": 0.9453125
+      }
+    }
+  },
+  "parameters": {
+    "total": 2777474,
+    "trainable": 2777474,
+    "non_trainable": 0,
+    "breakdown": {
+      "conv1": 3200,
+      "bn1": 128,
+      "layer1": 147968,
+      "layer2": 525696,
+      "layer3": 2099968,
+      "fc": 514
+    }
+  },
+  "flops": {
+    "flops": 108843776,
+    "flops_formatted": "108.844M",
+    "params": 2777474,
+    "params_formatted": "2.777M",
+    "method": "thop",
+    "available": true
+  }
+}

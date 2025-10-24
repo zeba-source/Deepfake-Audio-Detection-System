@@ -1,0 +1,28 @@
+{
+    "original_model_path": "models/test_model.pth",
+    "scripted_model_path": "models/test_model_scripted.pt",
+    "model_type": "resnet",
+    "input_shape": [
+        1,
+        1,
+        32,
+        32
+    ],
+    "export_method": "script",
+    "optimized": false,
+    "device": "cpu",
+    "validation": {
+        "max_output_difference": 0.0,
+        "outputs_match": true
+    },
+    "file_sizes": {
+        "original_mb": 42.69019603729248,
+        "scripted_mb": 42.745293617248535,
+        "size_change_percent": 0.1290637782687238
+    },
+    "performance": {
+        "original_ms": 9.512631893157959,
+        "scripted_ms": 8.546068668365479,
+        "speedup": 1.1131003344696206
+    }
+}
